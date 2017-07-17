@@ -1,0 +1,29 @@
+body {font-family: 'Open Sans', verdana, tahoma, arial, sans-serif; font-size: 18px;}
+
+a:visited { 
+    color: blue;
+}
+
+#mainBox {
+	text-align:left;
+	width: 80%;
+	padding:6px;
+	border:4px dotted #ffa500;
+	border-radius:10px;
+}
+
+.smallerText {
+	font-size: 70%;
+}
+
+.homeButton {
+	font-size: 10px;
+	background: #ffa500;
+	padding: 4px;
+	border-radius:4px;
+	text-decoration: none;
+}
+
+.spacer {
+	padding: 12px;
+}

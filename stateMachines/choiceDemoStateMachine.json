@@ -1,0 +1,56 @@
+{
+  "Comment": "A simple example of making choices in Step Functions.",
+  "StartAt": "generateRandomNumber",
+  "States": {
+    "generateRandomNumber": {
+      "Type": "Task",
+      "Resource": "ARN OF THE RANDOM NUMBER LAMBDA FUNCTION (generateRandomNumber.js) GOES HERE",
+      "ResultPath": "$.randomNumber",
+      "Next": "ChoiceState"
+    },
+    "ChoiceState": {
+      "Type" : "Choice",
+      "Choices": [
+        {
+          "Variable": "$.randomNumber",
+          "NumericLessThanEquals": 50,
+          "Next": "setDataForImageOne"
+        },
+        {
+          "Variable": "$.randomNumber",
+          "NumericGreaterThan": 50,
+          "Next": "setDataForImageTwo"
+        }
+      ],
+      "Default": "DefaultState"
+    },
+
+	"setDataForImageOne": {
+      "Type" : "Pass",
+      "Result": { "s3Bucket": "YOUR S3 BUCKET NAME", "s3Key": "PATH TO IMAGE" },
+      "Next": "getImageLabels"
+    },
+
+    "setDataForImageTwo": {
+      "Type" : "Pass",
+      "Result": { "s3Bucket": "YOUR S3 BUCKET NAME", "s3Key": "PATH TO IMAGE" },
+      "Next": "getImageLabels"
+    },
+
+	"getImageLabels": {
+      "Type" : "Task",
+      "Resource": "ARN OF THE DETECT LABELS LAMBDA FUNCTION (detectLabelsForImage.js) GOES HERE",
+      "Next": "Finish"
+    },
+
+    "DefaultState": {
+      "Type": "Fail",
+      "Cause": "We really should not have ended up here from a numeric value decision."
+    },
+
+    "Finish": {
+      "Type": "Succeed"
+    }
+  }
+}
+
