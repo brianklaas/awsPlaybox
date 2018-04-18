@@ -1,8 +1,6 @@
-# The AWS Playbox: Demos for "Level Up Your Web Apps With Amazon Web Services"
+# The AWS Playbox: Demos for Using Amazon Web Services from CFML
 
-This repo contains the sample app used during my presentation "Level Up Your Web Apps With Amazon Web Services." It contains sample CFML and Python code for working with a number of AWS services.
-
-There are three requirements for getting these demos working. I know that sounds like a lot, but we're dealing with a series of external services in multiple lanaguages in these demos, and each must be set up correctly.
+There are three requirements for getting these demos working:
 
 1. Add the AWS SDK .jar and related files to your CF install.
 2. Set up your own AWS credentials and add them to awsCredentials.cfc.
@@ -12,7 +10,7 @@ There are three requirements for getting these demos working. I know that sounds
 
 The demos in this repo require that you have the following .jar files in your /coldfusion/lib/ directory:
 
-- aws-java-sdk-1.11.120 or later
+- aws-java-sdk-1.11.311 or later
 - jackson-annotations
 - jackson-core
 - jackson-databind
@@ -26,13 +24,16 @@ You have to create your own AWS account and provide both the AccessKey and Secre
 
 The account for which you are providing credentials must also have permissions for the following services:
 
+- S3 
 - SNS
 - Lambda
 - CloudWatch (for Lambda logging)
-- Rekognition
-- S3 (for Rekognition)
-- Step Functions
 - DynamoDB
+- Step Functions
+- Rekognition
+- Transcribe
+- Translate
+- Polly
 
 For more infomration about IAM accounts, roles, and permissions, please review the [IAM guide](http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html).
 
@@ -44,7 +45,23 @@ You need to set up the following resources within AWS for these demos to work:
 2. Lambda - create a Lambda function using the code in nodejs/lambda/lambda-returnDataToCaller.js. The Lambda runtime should be NodeJS 4.3 or later, and you do not need to configure a trigger for the function, as it will be invoked from this application. The ARN of the function must be added to application.cfc. 
 3. DynamoDB - create a DynamoDB table with a partition (primary) key of "userID" (String) and a sort key (range key) of "epochTime" (Number). The table name must be added to application.cfc.
 4. Rekognition - add photos for Rekognition to analyze. There's a separate list of photos for matching faces, and a list for generating labels (image analysis). These photos and the name of the S3 bucket in which they can be found need to be added to the top of rekognition.cfm.
-4. Step Functions - You must first create two Lambda functions using the code in nodejs/lambda/ -- generateRandomNumber.js and detectLabelsForImage.js. The ARNs of those functions must be added to stateMachines/choiceDemoStateMachine.json. Additionally, the name of the S3 bucket and the path to the photos that will be analyzed as part of this step function must be added to stateMachines/choiceDemoStateMachine.json. Once you've added all the required information, use stateMachines/choiceDemoStateMachine.json to create a new Step Function state machine in the AWS Console.
+5. Step Functions: 
+There are two workflows you can set up:
+  - Describe an Image
+  
+    a. Create the two Lambda functions used in this workflow using the code in nodejs/lambda/ -- generateRandomNumber.js and detectLabelsForImage.js.   
+    b. Add the ARNs of those functions to stateMachines/choiceDemoStateMachine.json.   
+    c. Add the name of the S3 bucket and the path to the photos that will be analyzed to stateMachines/choiceDemoStateMachine.json.   
+    d. Once you've added all the required information, use stateMachines/choiceDemoStateMachine.json to create a new Step Function state machine in the AWS Console.  
+    e. Add the ARN of the workflow to application.cfc as the application.awsResources.stepFunctionRandomImageARN value.
+
+   - Transcribe, Translate, and Speak a Video
+
+    a. Create the five Lambda functions used in this workflow using the code in nodejs/lambda/transcribeTranslateExample. You will need to add the name of your S3 bucket where you want the output from the workflow to go to getTranscriptionFile.js, translateText.js, and convertTextToSpeech.js.  
+    b. Add the ARNs of those functions to stateMachines/transcribeTranslateSpeakWorkflow.json.   
+    c. Once you've added all the required information, use stateMachines/transcribeTranslateSpeakWorkflow.json to create a new Step Function state machine in the AWS Console.    
+    d. Add the ARN of the workflow to application.cfc as the application.awsResources.stepFunctionTranscribeTranslateARN value.   
+    e. Modify stepFunctions.cfm (the inputStruct variable) to point to the URL of a MP4 file on S3.    
 
 Remember, the AWS docs are pretty great. Use the [Java API Reference](http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/index.html) often, as it'll tell you almost everything you need to know for working with a particular AWS service.
 

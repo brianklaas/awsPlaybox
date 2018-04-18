@@ -1,0 +1,190 @@
+{
+  "Comment": "Manages the workflow of transcribing a MP4, translating into various languages, and making MP3 files of those translations.",
+  "StartAt": "startTranscribeMP4",
+  "States": {
+    "startTranscribeMP4": {
+      "Type": "Task",
+      "Resource": "ARN OF THE START TRANSCRIBE JOB LAMBDA FUNCTION (startTranscribeJob.js) GOES HERE",
+      "Next": "WaitForTranscriptionComplete",
+      "Retry": [
+        {
+          "ErrorEquals": [ "States.ALL" ],
+          "IntervalSeconds": 30,
+          "MaxAttempts": 3,
+          "BackoffRate": 10
+        }
+      ]
+    },
+    "WaitForTranscriptionComplete": {
+      "Type": "Wait",
+      "Seconds": 30,
+      "Next": "Get Job Status"
+    },
+    "Get Job Status": {
+      "Type": "Task",
+      "Resource": "ARN OF THE CHECK TRANSCRIBE JOB STATUS LAMBDA FUNCTION (checkTranscribeJobStatus.js) GOES HERE",
+      "Next": "Transcript Complete?"
+    },
+    "Transcript Complete?": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.jobStatus",
+          "StringEquals": "FAILED",
+          "Next": "Transcript Failed"
+        },
+        {
+          "Variable": "$.jobStatus",
+          "StringEquals": "COMPLETED",
+          "Next": "Get Transcription File"
+        }
+      ],
+      "Default": "WaitForTranscriptionComplete"
+    },
+    "Transcript Failed": {
+      "Type": "Fail",
+      "Cause": "AWS Transcribe Job Failed",
+      "Error": "Get Job Status returned FAILED"
+    },
+    "Get Transcription File": {
+      "Type": "Task",
+      "Resource": "ARN OF THE GET TRANSCRIPTION FILE LAMBDA FUNCTION (getTranscriptionFile.js) GOES HERE",
+      "Next": "Make Versions"
+    },
+    "Make Versions": {
+      "Type": "Parallel",
+      "Next": "Workflow Complete",
+      "Branches": [
+        {
+          "StartAt": "makeSpanishStart",
+          "States": {
+            "makeSpanishStart": {
+              "Type": "Pass",
+              "Result": "es",
+              "ResultPath": "$.languageToUse",
+              "Next": "makeSpanishText"
+            },
+            "makeSpanishText": {
+              "Type": "Task",
+      "Resource": "ARN OF THE TRANSLATE TEXT LAMBDA FUNCTION (translateText.js) GOES HERE",
+              "Next": "prepSpanishVoiceOutput",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ]
+            },
+            "prepSpanishVoiceOutput": {
+              "Type": "Task",
+              "Resource": "ARN OF THE PREP TRANSLATED TEXT FOR SPEECH LAMBDA FUNCTION (prepTranslatedTextForSpeech.js) GOES HERE",
+              "Next": "makeSpanishAudioFile"
+            },
+            "makeSpanishAudioFile": {
+              "Type": "Task",
+              "Resource": "ARN OF THE CONVERT TEXT TO SPEECH LAMBDA FUNCTION (convertTextToSpeech.js) GOES HERE",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "makeFrenchStart",
+          "States": {
+            "makeFrenchStart": {
+              "Type": "Pass",
+              "Result": "fr",
+              "ResultPath": "$.languageToUse",
+              "Next": "makeFrenchText"
+            },
+            "makeFrenchText": {
+              "Type": "Task",
+      "Resource": "ARN OF THE TRANSLATE TEXT LAMBDA FUNCTION (translateText.js) GOES HERE",
+              "Next": "prepFrenchVoiceOutput",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ]
+            },
+            "prepFrenchVoiceOutput": {
+              "Type": "Task",
+              "Resource": "ARN OF THE PREP TRANSLATED TEXT FOR SPEECH LAMBDA FUNCTION (prepTranslatedTextForSpeech.js) GOES HERE",
+              "Next": "makeFrenchAudioFile"
+            },
+            "makeFrenchAudioFile": {
+              "Type": "Task",
+              "Resource": "ARN OF THE CONVERT TEXT TO SPEECH LAMBDA FUNCTION (convertTextToSpeech.js) GOES HERE",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ],
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "makeGermanStart",
+          "States": {
+            "makeGermanStart": {
+              "Type": "Pass",
+              "Result": "de",
+              "ResultPath": "$.languageToUse",
+              "Next": "makeGermanText"
+            },
+            "makeGermanText": {
+              "Type": "Task",
+      "Resource": "ARN OF THE TRANSLATE TEXT LAMBDA FUNCTION (translateText.js) GOES HERE",
+              "Next": "prepGermanVoiceOutput",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ]
+            },
+            "prepGermanVoiceOutput": {
+              "Type": "Task",
+              "Resource": "ARN OF THE PREP TRANSLATED TEXT FOR SPEECH LAMBDA FUNCTION (prepTranslatedTextForSpeech.js) GOES HERE",
+              "Next": "makeGermanAudioFile"
+            },
+            "makeGermanAudioFile": {
+              "Type": "Task",
+              "Resource": "ARN OF THE CONVERT TEXT TO SPEECH LAMBDA FUNCTION (convertTextToSpeech.js) GOES HERE",
+              "Retry": [
+                {
+                  "ErrorEquals": [ "States.ALL" ],
+                  "IntervalSeconds": 60,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 10
+                }
+              ],
+              "End": true
+            }
+          }
+        }
+      ]
+    },
+    "Workflow Complete": {
+      "Type": "Succeed"
+    }
+  }
+}

@@ -7,7 +7,7 @@ Additionally, the IAM account with which these credentials are assoicated must h
 For more information on IAM accounts and permissions, see http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
 
 Author: Brian Klaas (bklaas@jhu.edu)
-(c) 2017, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
+(c) 2018, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
 
 */
 

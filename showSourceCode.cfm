@@ -32,6 +32,34 @@
 			<cfset fileTitle = "State Machine: A Sample Choice State Machine" />
 			<cfset pathToFile = "/awsPlaybox/stateMachines/choiceDemoStateMachine.json" />
 		</cfcase>
+		<cfcase value="transcribeTanslateStepFunc">
+			<cfset fileTitle = "State Machine: Transcribe a Video, Translate, and Speak Tranlation" />
+			<cfset pathToFile = "/awsPlaybox/stateMachines/transcribeTranslateSpeakWorkflow.json" />
+		</cfcase>
+		<cfcase value="vwfStartTranscribe">
+			<cfset fileTitle = "Node: Start Transcribe Job" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/startTranscribeJob.js" />
+		</cfcase>
+		<cfcase value="vwfCheckTranscribeJob">
+			<cfset fileTitle = "Node: Check Transcribe Job Status" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/checkTranscribeJobStatus.js" />
+		</cfcase>
+		<cfcase value="vwfGetTranscript">
+			<cfset fileTitle = "Node: Get Transcription File" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/getTranscriptionFile.js" />
+		</cfcase>
+		<cfcase value="vwfTranslateText">
+			<cfset fileTitle = "Node: Translate Text" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/translateText.js" />
+		</cfcase>
+		<cfcase value="vwfPrepTranlation">
+			<cfset fileTitle = "Node: Prep Translated Text for Speech" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/prepTranslatedTextForSpeech.js" />
+		</cfcase>
+		<cfcase value="vwfTextToSpeech">
+			<cfset fileTitle = "Node: Convert Text to Speech" />
+			<cfset pathToFile = "/awsPlaybox/nodejs/lambda/translateTranscribeExample/convertTextToSpeech.js" />
+		</cfcase>
 		<cfdefaultcase>
 			<cfthrow message="Unsupported action requested" detail="You have requested a file (#URL.fileToGrab#) which is not supported at this time." />
 		</cfdefaultcase>
