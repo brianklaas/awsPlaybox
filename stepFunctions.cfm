@@ -22,8 +22,9 @@
 			inputStruct = StructNew();
 			inputStruct['urlOfFileOnS3']="HTTPS PATH TO YOUR SOURCE VIDEO FILE ON S3";
 			inputStruct['mediaType']="mp4";
-			// If your CF server is configured to add a double slash at the start of serialized JSON, you need to strip that out
-			executionRequest.setInput(right(serializeJSON(inputStruct), (Len(serializeJSON(inputStruct))-2)));
+			// If your CF server is configured to add a double slash at the start of serialized JSON, and is CF11+, you need to strip that out by setting the third parameter of serializeJSON -- useSecureJSONPrefix -- to false
+			// If you're running CF10, use: executionRequest.setInput(right(serializeJSON(inputStruct), (Len(serializeJSON(inputStruct))-2)));
+			executionRequest.setInput(serializeJSON(inputStruct, false, false));
 		}
 		executionRequest.setStateMachineArn(stepFunctionARN);
 
