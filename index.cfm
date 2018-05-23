@@ -18,10 +18,12 @@
 				<p><a href="rekognition.cfm">Rekognition</a></p>
 				<p><a href="stepFunctions.cfm">Step Functions</a></p>
 				<p>&nbsp;</p>
+				<!---
 				<h3>Python</h3>
 				<p><a href="python/sns-python.cfm">Simple Notification Service (SNS)</a></p>
 				<div class="spacer"></div>
 				<p>&nbsp;</p>
+				--->
 				<div class="smallerText">
 					<h3>Source Code</h3>
 					<p>Lambda:</p>

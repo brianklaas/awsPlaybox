@@ -14,9 +14,9 @@ component {
         application.awsResources.lambdaFunctionARN = "ARN OF THE LAMBDA FUNCTION IN lambda.cfm GOES HERE";
         application.awsResources.stepFunctionRandomImageARN = "ARN OF THE RANDOM IMAGE STEP FUNCTION STATE MACHINE GOES HERE";
         application.awsResources.stepFunctionTranscribeTranslateARN = "ARN OF THE TRANSCRIBE, TRANSLATE, SPEAK STEP FUNCTION STATE MACHINE GOES HERE";
-        application.awsResources.snsTopicARN = "ARN OF THE SNS TOPIC IN sns.cfm GOES HERE";
         application.awsResources.dynamoDBTableName = "TABLE NAME OF THE TABLE IN DYNAMODB IN dynamodb.cfm GOES HERE";
-
+		application.awsResources.currentSNSTopicARN = "";
+		
         return true;
     }
 
