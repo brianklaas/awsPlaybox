@@ -3,8 +3,8 @@ Rekognition Utility Functions
 
 This component contains functions to make requests to AWS Rekognition.
 
-Author: Brian Klaas (bklaas@jhu.edu)
-(c) 2018, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
+Author: Brian Klaas (brian.klaas@gmail.com)
+(c) 2018, Brian Klaas
 
 */
 
@@ -29,13 +29,13 @@ component output="false" hint="A utility for making requests to AWS Rekognition.
 		var compareFacesRequest = CreateObject('java', 'com.amazonaws.services.rekognition.model.CompareFacesRequest').init();
 				
 		var faceImage1 = CreateObject('java', 'com.amazonaws.services.rekognition.model.Image').init();
-		faceImage1S3Object = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
+		var faceImage1S3Object = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
 		faceImage1S3Object.setBucket(arguments.awsBucketName);
 		faceImage1S3Object.setName(arguments.face1Path);
 		faceImage1.setS3Object(faceImage1S3Object);
 
 		var faceImage2 = CreateObject('java', 'com.amazonaws.services.rekognition.model.Image').init();
-		faceImage2S3Object = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
+		var faceImage2S3Object = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
 		faceImage2S3Object.setBucket(arguments.awsBucketName);
 		faceImage2S3Object.setName(arguments.face2Path);
 		faceImage2.setS3Object(faceImage2S3Object);
@@ -47,10 +47,57 @@ component output="false" hint="A utility for making requests to AWS Rekognition.
 	}
 
 	/**
+	*	@description Returns an array of structures of sentiment labels for the faces in the image
+	*	@requiredArguments
+	*		- awsBucketName = Name of the bucket where the images reside
+	*		- pathToImage = Path to the image in the provided bucket
+	*/
+	public array function detectSentiment(required string awsBucketName, required string pathToImage) {
+		var returnArray = arrayNew(1);
+		var thisFaceObj = 0;
+		var faceCounter = 0;
+		var detectFacesRequest = CreateObject('java', 'com.amazonaws.services.rekognition.model.DetectFacesRequest').init();
+		var imageToAnalyze = CreateObject('java', 'com.amazonaws.services.rekognition.model.Image').init();
+		var imageOnS3 = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
+		imageOnS3.setBucket(arguments.awsBucketName);
+		imageOnS3.setName(arguments.pathToImage);
+		imageToAnalyze.setS3Object(imageOnS3);
+		detectFacesRequest.setImage(imageToAnalyze);
+		var attributesArray = ["ALL"];
+		detectFacesRequest.setAttributes(attributesArray);
+		var detectFacesResult = variables.rekognitionService.detectFaces(detectFacesRequest);
+		var facesArray = detectFacesResult.getFaceDetails();
+
+		facesArray.each(function(thisFaceObj, index) {
+			faceCounter++;
+			returnArray[faceCounter] = structNew();
+			// For all the properties of the FaceDetail object, see https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/rekognition/model/FaceDetail.html
+			returnArray[faceCounter]['Age Range'] = thisFaceObj.getAgeRange().getLow() & "-" & thisFaceObj.getAgeRange().getHigh();
+			returnArray[faceCounter]['Gender'] = thisFaceObj.getGender().getValue();
+			returnArray[faceCounter]['Eyeglasses'] = thisFaceObj.getEyeglasses().getValue();
+			returnArray[faceCounter]['Sunglasses'] = thisFaceObj.getSunglasses().getValue();
+			returnArray[faceCounter]['Smiling'] = thisFaceObj.getSmile().getValue();
+			returnArray[faceCounter]['Eyes Open'] = thisFaceObj.getEyesOpen().getValue();
+			returnArray[faceCounter]['Mouth Open'] = thisFaceObj.getMouthOpen().getValue();
+			returnArray[faceCounter]['Has Beard'] = thisFaceObj.getBeard().getValue();
+			var emotionsForFace = thisFaceObj.getEmotions();
+			var thisEmotionObj = 0;
+			var emotionCounter = 0;
+			emotionsForFace.each(function(thisEmotionObj, index) {
+				emotionCounter++;
+				returnArray[faceCounter]['emotions'][emotionCounter] = structNew();
+				returnArray[faceCounter]['emotions'][emotionCounter]['Type'] = thisEmotionObj.getType();
+				returnArray[faceCounter]['emotions'][emotionCounter]['Confidence'] = Int(thisEmotionObj.getConfidence());
+			});
+		});
+		return returnArray;
+	}
+
+	/**
 	*	@description Returns a structure of labels for the image, with the label as the key and the confidence level as the value
 	*	@requiredArguments
 	*		- awsBucketName = Name of the bucket where the images reside
-	*		- pathToImage = Path to the first (source) face image in the provided bucket
+	*		- pathToImage = Path to the image in the provided bucket
 	*/
 	public array function getImageLabels(required string awsBucketName, required string pathToImage) {
 		var returnArray = arrayNew(1);

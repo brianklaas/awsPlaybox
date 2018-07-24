@@ -13,8 +13,8 @@
 			case 'compareFaces':
 				sourceImage = s3images.facesForMatching[randRange(1, arrayLen(s3images.facesForMatching))];
 				targetImage = s3images.facesForMatching[randRange(1, arrayLen(s3images.facesForMatching))];
-				result = rekognitionLib.compareFaces(s3images.awsBucketName, sourceImage, targetImage);
-				similarityValue = rekognitionLib.getSimilarityValue(result);
+				compareFacesResult = rekognitionLib.compareFaces(s3images.awsBucketName, sourceImage, targetImage);
+				similarityValue = rekognitionLib.getSimilarityValue(compareFacesResult);
 				if (similarityValue gte 0) {
 					rekogFunctionResult = "Rekognition gave a similarity value of " & similarityValue & " to the two images.";
 				} else {
@@ -25,6 +25,11 @@
 			case 'detectLabels':
 				sourceImage = s3images.imagesForLabels[randRange(1, arrayLen(s3images.imagesForLabels))];
 				getImageLabelsResult = rekognitionLib.getImageLabels(s3images.awsBucketName, sourceImage);
+				break;
+
+			case 'detectSentiment':
+				sourceImage = s3images.facesForMatching[randRange(1, arrayLen(s3images.facesForMatching))];
+				detectSentimentResult = rekognitionLib.detectSentiment(s3images.awsBucketName, sourceImage);
 				break;
 
 			default:
@@ -82,11 +87,34 @@
 								<br clear="all">
 							</cfoutput>
 						</cfcase>
+						<cfcase value="detectSentiment">
+							<cfoutput>
+								<div>
+									<div style="width:50%; float:left;">
+										<p>Here is the image used:</p>
+										<p>
+											<img src="http://#s3images.awsBucketName#.s3.amazonaws.com/#sourceImage#" width="450" height="350" border="1" />
+										</p>
+									</div>
+									<div style="width:50%; float:right;">
+										<cfset faceCounter = 0>
+										<cfloop array="#detectSentimentResult#" index="idxThisFaceInfo">
+											<cfset faceCounter++>
+											<p>Face #faceCounter#:</p>
+											<cfdump var="#idxThisFaceInfo#">
+										</cfloop>
+									</div>
+								</div>
+								<br clear="all">
+							</cfoutput>
+						</cfcase>
 					</cfswitch>
 				</cfif> <!--- End if a Rekognition request was made --->
 
 				<p><a href="rekognition.cfm?rekogRequest=compareFaces">Compare Two Faces</a></p>
 				<p><a href="rekognition.cfm?rekogRequest=detectLabels">Label the Properties of an Image</a></p>
+				<p><a href="rekognition.cfm?rekogRequest=detectSentiment">Detect Facial Sentiment of an Image</a></p>
+
 				<p align="right" ><a href="index.cfm" class="homeButton">Home</a></p>
 			</div>
 		</div>
