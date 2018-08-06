@@ -3,8 +3,9 @@
 <!--- Put the URLs to your images in S3 here --->
 <cfset s3images = structNew()>
 <cfset s3images.awsBucketName = "YOUR BUCKET NAME GOES HERE" />
-<cfset s3images.facesForMatching = [ "ARRAY","OF","PATHS","TO","IMAGES","IN","THE","BUCKET","LISTED","ABOVE"] />
-<cfset s3images.imagesForLabels = [ "ARRAY","OF","PATHS","TO","IMAGES","IN","THE","BUCKET","LISTED","ABOVE] />
+<cfset s3images.facesForMatching = [ "ARRAY","OF","PATHS","TO","IMAGES","IN","THE","BUCKET","LISTED","ABOVE" ] />
+<cfset s3images.imagesForLabels = [ "ARRAY","OF","PATHS","TO","IMAGES","IN","THE","BUCKET","LISTED","ABOVE" ] />
+<cfset s3images.imagesWithText = [ "ARRAY","OF","PATHS","TO","IMAGES","IN","THE","BUCKET","LISTED","ABOVE" ] />
 
 <cfif structKeyExists(URL, "rekogRequest")>
 	<cfscript>
@@ -30,6 +31,11 @@
 			case 'detectSentiment':
 				sourceImage = s3images.facesForMatching[randRange(1, arrayLen(s3images.facesForMatching))];
 				detectSentimentResult = rekognitionLib.detectSentiment(s3images.awsBucketName, sourceImage);
+				break;
+
+			case 'detectText':
+				sourceImage = s3images.imagesWithText[randRange(1, arrayLen(s3images.imagesWithText))];
+				detectTextResult = rekognitionLib.detectText(s3images.awsBucketName, sourceImage);
 				break;
 
 			default:
@@ -108,12 +114,36 @@
 								<br clear="all">
 							</cfoutput>
 						</cfcase>
+						<cfcase value="detectText">
+							<cfoutput>
+								<div>
+									<div style="width:50%; float:left;">
+										<p>Here is the image used:</p>
+										<p>
+											<img src="http://#s3images.awsBucketName#.s3.amazonaws.com/#sourceImage#" width="450" height="350" border="1" />
+										</p>
+									</div>
+									<div style="width:50%; float:right;">
+										<p>Lines of text:</p>
+										<cfloop array="#detectTextResult.lines#" index="idxThisLine">
+											#idxThisLine.id# | #idxThisLine.label# | (#idxThisLine.confidence#%)<br/>
+										</cfloop>
+										<p>Individual words:</p>
+										<cfloop array="#detectTextResult.words#" index="idxThisWord">
+											Line: #idxThisWord.parentID# &mdash; #idxThisWord.label# (#idxThisWord.confidence#%)<br/>
+										</cfloop>
+									</div>
+								</div>
+								<br clear="all">
+							</cfoutput>
+						</cfcase>
 					</cfswitch>
 				</cfif> <!--- End if a Rekognition request was made --->
 
 				<p><a href="rekognition.cfm?rekogRequest=compareFaces">Compare Two Faces</a></p>
 				<p><a href="rekognition.cfm?rekogRequest=detectLabels">Label the Properties of an Image</a></p>
 				<p><a href="rekognition.cfm?rekogRequest=detectSentiment">Detect Facial Sentiment of an Image</a></p>
+				<p><a href="rekognition.cfm?rekogRequest=detectText">Detect Text in an Image</a></p>
 
 				<p align="right" ><a href="index.cfm" class="homeButton">Home</a></p>
 			</div>

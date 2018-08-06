@@ -94,7 +94,53 @@ component output="false" hint="A utility for making requests to AWS Rekognition.
 	}
 
 	/**
-	*	@description Returns a structure of labels for the image, with the label as the key and the confidence level as the value
+	*	@description Returns an structure of both the lines of text found in the image and the individual words
+	*	@requiredArguments
+	*		- awsBucketName = Name of the bucket where the images reside
+	*		- pathToImage = Path to the image in the provided bucket
+	*/
+	public struct function detectText(required string awsBucketName, required string pathToImage) {
+		var returnStruct = structNew();
+		var thisDetectionObj = 0;
+		var linesCounter = 0;
+		var wordsCounter = 0;
+		var detectTextRequest = CreateObject('java', 'com.amazonaws.services.rekognition.model.DetectTextRequest').init();
+		var imageToScan = CreateObject('java', 'com.amazonaws.services.rekognition.model.Image').init();
+		var imageS3Object = CreateObject('java', 'com.amazonaws.services.rekognition.model.S3Object').init();
+		imageS3Object.setBucket(arguments.awsBucketName);
+		imageS3Object.setName(arguments.pathToImage);
+		imageToScan.setS3Object(imageS3Object);
+		detectTextRequest.setImage(imageToScan);
+
+		var detectTextResult = variables.rekognitionService.detectText(detectTextRequest);
+		var detectionsArray = detectTextResult.getTextDetections();
+
+		returnStruct.lines = arrayNew(1);
+		returnStruct.words = arrayNew(1);
+
+		detectionsArray.each(function(thisDetectionObj, index) {
+			if (thisDetectionObj.getType() is "LINE") {
+				linesCounter++;
+				returnStruct.lines[linesCounter] = structNew();
+				returnStruct.lines[linesCounter]['label'] = thisDetectionObj.getDetectedText();
+				returnStruct.lines[linesCounter]['confidence'] = Int(thisDetectionObj.getConfidence());
+				returnStruct.lines[linesCounter]['id'] = thisDetectionObj.getID();
+				returnStruct.lines[linesCounter]['geometry'] = thisDetectionObj.getGeometry().toString();
+			} else {
+				wordsCounter++;
+				returnStruct.words[wordsCounter] = structNew();
+				returnStruct.words[wordsCounter]['label'] = thisDetectionObj.getDetectedText();
+				returnStruct.words[wordsCounter]['confidence'] = Int(thisDetectionObj.getConfidence());
+				returnStruct.words[wordsCounter]['id'] = thisDetectionObj.getID();
+				returnStruct.words[wordsCounter]['parentID'] = thisDetectionObj.getParentID();
+				returnStruct.words[wordsCounter]['geometry'] = thisDetectionObj.getGeometry().toString();
+			}
+		});
+		return returnStruct;
+	}
+
+	/**
+	*	@description Returns an array of labels for the image as structures, with the label as the key and the confidence level as the value
 	*	@requiredArguments
 	*		- awsBucketName = Name of the bucket where the images reside
 	*		- pathToImage = Path to the image in the provided bucket
