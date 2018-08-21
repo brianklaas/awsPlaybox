@@ -3,8 +3,8 @@ AWS Service Factory
 
 This component creates AWS service objects based on the parameter passed in.
 
-Author: Brian Klaas (bklaas@jhu.edu)
-(c) 2018, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
+Author: Brian Klaas (brian.klaas@gmail.com)
+(c) 2018, Brian Klaas
 
 */
 
@@ -45,7 +45,9 @@ component output="false" hint="A utility for creating AWS Service objects." {
 			case 'stepFunctions':
 				serviceObject = CreateObject('java', 'com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
 				break;
-
+			case 'transcribe':
+				serviceObject = CreateObject('java', 'com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				break;
 			default:
 				throw(message="Unsupported service requested", detail="You have requested an AWS service (#arguments.serviceName#) which is not supported at this time.");
 				break;

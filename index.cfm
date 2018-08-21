@@ -17,6 +17,7 @@
 				<p><a href="sns.cfm">Simple Notification Service (SNS)</a></p>
 				<p><a href="rekognition.cfm">Rekognition</a></p>
 				<p><a href="stepFunctions.cfm">Step Functions</a></p>
+				<p><a href="transcribe.cfm">Transcribe</a></p>
 				<p>&nbsp;</p>
 				<!---
 				<h3>Python</h3>

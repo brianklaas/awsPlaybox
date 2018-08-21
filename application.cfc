@@ -6,8 +6,9 @@ component {
 
     function onApplicationStart(){
         application.awsServiceFactory = createObject("component", "model.awsServiceFactory").init();
-
+        
         application.currentStepFunctionExecutions = arrayNew(1);
+        application.currentTranscribeJobs = arrayNew(1);
 
         // Put your ARNs for Lambda, and your DynamoDB table name here
         application.awsResources = structNew();
@@ -16,7 +17,7 @@ component {
         application.awsResources.stepFunctionTranscribeTranslateARN = "ARN OF THE TRANSCRIBE, TRANSLATE, SPEAK STEP FUNCTION STATE MACHINE GOES HERE";
         application.awsResources.dynamoDBTableName = "TABLE NAME OF THE TABLE IN DYNAMODB IN dynamodb.cfm GOES HERE";
 		application.awsResources.currentSNSTopicARN = "";
-		
+
         return true;
     }
 
