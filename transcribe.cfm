@@ -90,6 +90,31 @@
     </cfscript>
 </cfif>
 
+<cfif structKeyExists(URL, "getTranscriptText")>
+	<cfscript>
+        // See the comments for checkTranscribeJob, above, for what this all does.
+        transcribeService = application.awsServiceFactory.createServiceObject('transcribe');
+        getTranscriptionJobRequest = CreateObject('java', 'com.amazonaws.services.transcribe.model.GetTranscriptionJobRequest').init();
+		getTranscriptionJobRequest.setTranscriptionJobName(URL.getTranscriptText);
+        getTranscriptionJobResult = transcribeService.getTranscriptionJob(getTranscriptionJobRequest);
+        transcriptJob = getTranscriptionJobResult.getTranscriptionJob();
+        transcriptUri = transcriptJob.getTranscript().getTranscriptFileUri();
+
+        // Read in the transcript file and pull out just the transcript text
+        cfhttp(method="GET", charset="utf-8", url="#transcriptUri#", result="transcriptFile");
+        transcriptFileAsJSON = deserializeJSON(transcriptFile.fileContent, false);
+        // The JSON result file contains four properties: accountID, jobName, results, and status.
+        transcriptData = transcriptFileAsJSON.results;
+        // Withn the results property, there are three properties: items, speaker labels, and transcripts.
+        // Items are the indivdiual words in the transcript and the exact time each word appears. Useful for making captions.
+        // The transcripts property is an array and, at this time, will only contain a single member, a property labeled: transcript.
+        transcriptText = transcriptData.transcripts[1].transcript;
+        cfheader(name="Content-Disposition", value="inline; fileName=#URL.getTranscriptText#.txt");
+        writeDump(transcriptText);
+        abort;
+    </cfscript>
+</cfif>
+
 <cfcontent reset="true" />
 
 <!doctype html>
@@ -117,9 +142,10 @@
 						<cfif (transcribeJobResult.status IS "COMPLETED")>
 							<p>Finished On: #DateTimeFormat(transcribeJobResult.finishedOn, "long")#</p>
 							<p>Transcript file location: #transcribeJobResult.transcriptUri#</p>
-                            <p><a href="#transcribeJobResult.transcriptUri#" download>Download transcript file</a>
+                            <p><a href="#transcribeJobResult.transcriptUri#" download>Download the full transcript job output</a>
+                            <br/><br/><a href="transcribe.cfm?getTranscriptText=#transcribeJobResult.jobName#" download>Download just the text transcript</a>
                             <!--- The link that Transcribe generates for output in the default, AWS-owned bucket is time stamped, and only valid for 5 minutes from when it was generated during the getTranscriptionJob request. --->
-                            <br/><br/><small>Note: this link is only valid until #DateTimeFormat(DateAdd('n',5,now()), 'short')#</small></p>
+                            <br/><br/><small>Note: these links are only valid until #DateTimeFormat(DateAdd('n',5,now()), 'short')#</small></p>
 						<cfelseif (transcribeJobResult.status IS "FAILED")>
                             <p>Reason for failure: #transcribeJobResult.failureReason#</p>
 						</cfif>
