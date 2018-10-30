@@ -12,12 +12,13 @@
 			<div id="mainBox">
 				<h1>AWS Service Playbox</h1>
 				<h3>CFML</h3>
-				<p><a href="lambda.cfm">Lambda Function Invocation</a></p>
 				<p><a href="dynamodb.cfm">DynamoDB</a></p>
-				<p><a href="sns.cfm">Simple Notification Service (SNS)</a></p>
+				<p><a href="lambda.cfm">Lambda Function Invocation</a></p>
 				<p><a href="rekognition.cfm">Rekognition</a></p>
+				<p><a href="sns.cfm">Simple Notification Service (SNS)</a></p>
 				<p><a href="stepFunctions.cfm">Step Functions</a></p>
 				<p><a href="transcribe.cfm">Transcribe</a></p>
+				<p><a href="translate.cfm">Translate</a></p>
 				<p>&nbsp;</p>
 				<!---
 				<h3>Python</h3>

@@ -48,6 +48,9 @@ component output="false" hint="A utility for creating AWS Service objects." {
 			case 'transcribe':
 				serviceObject = CreateObject('java', 'com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
 				break;
+			case 'translate':
+				serviceObject = CreateObject('java', 'com.amazonaws.services.translate.AmazonTranslateClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				break;
 			default:
 				throw(message="Unsupported service requested", detail="You have requested an AWS service (#arguments.serviceName#) which is not supported at this time.");
 				break;
