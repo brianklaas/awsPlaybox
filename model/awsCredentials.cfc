@@ -6,8 +6,8 @@ You must enter your own accessKey and secretKey here for any of these examples t
 Additionally, the IAM account with which these credentials are assoicated must have permissions to work with SNS, Lambda, and DynamoDB.
 For more information on IAM accounts and permissions, see http://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html
 
-Author: Brian Klaas (bklaas@jhu.edu)
-(c) 2018, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
+Author: Brian Klaas (brian.klaas@gmail.com)
+(c) 2019, Brian Klaas
 
 */
 

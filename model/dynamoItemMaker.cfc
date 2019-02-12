@@ -3,8 +3,8 @@ DynamoDB Item Maker
 
 This component creates DynamoDB Item objects with randomized attributes.
 
-Author: Brian Klaas (bklaas@jhu.edu)
-(c) 2018, The Johns Hopkins Bloomberg School of Public Health Center for Teaching and Learning
+Author: Brian Klaas (brian.klaas@gmail.com)
+(c) 2019, Brian Klaas
 
 */
 

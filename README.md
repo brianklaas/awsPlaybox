@@ -8,9 +8,11 @@ There are three requirements for getting these demos working:
 
 ### Requirement One: The AWS SDK .jar and Related Files
 
-The demos in this repo require that you have the following .jar files in your /coldfusion/lib/ directory:
+If you are running CF2018, the demos in this repo require that you have the following .jar file in your /cfusion/lib/ directory:
 
 - aws-java-sdk-1.11.311 or later
+
+If you are running CF2016 or earlier, you also need to add the following .jar files to your /cfusion/lib/ directory:
 - jackson-annotations
 - jackson-core
 - jackson-databind
@@ -24,6 +26,7 @@ You have to create your own AWS account and provide both the AccessKey and Secre
 
 The account for which you are providing credentials must also have permissions for the following services:
 
+- IAM
 - S3 
 - SNS
 - Lambda

@@ -2,21 +2,25 @@
 
 <cfif structKeyExists(URL, "invokeFunction")>
 	<cfscript>
-		// ColdFusion 10 and lower upper cases serialization of keys in a structure unless you use array notation to define the keys in the struct.
-		payload = {};
-		payload["firstName"] = "Brian";
-		payload["lastName"] = "Klaas";
-		payload["email"] = "bklaas@jhu.edu";
-		payload["classes"] = arrayNew(1);
-		payload["classes"][1] = structNew();
-		payload["classes"][1]["courseNumber"] = "550.990.81";
-		payload["classes"][1]["role"] = "Faculty";
-		payload["classes"][2] = structNew();
-		payload["classes"][2]["courseNumber"] = "120.641.01";
-		payload["classes"][2]["role"] = "Student";
+		payload = {
+			"firstName": "Brian",
+			"lastName": "Klaas",
+			"email": "brian.klaas@gmail.com",
+			"classes": [
+				{
+					"courseNumber": "260.710.81",
+					"role": "Faculty"
+				},
+				{
+					"courseNumber": "120.641.01",
+					"role": "Student"
+				}
+			]
+		}
 
 		jsonPayload = serializeJSON(payload);
-		jsonPayload = replace(jsonPayload,"//","");
+		// You need uncomment the line below if you have the "Prefix serialized JSON with " option turned on in the ColdFusion administrator.
+		// jsonPayload = replace(jsonPayload,"//","");
 
 		lambda = application.awsServiceFactory.createServiceObject('lambda');
 		invokeRequest = CreateObject('java', 'com.amazonaws.services.lambda.model.InvokeRequest').init();

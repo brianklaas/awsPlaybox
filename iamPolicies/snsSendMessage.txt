@@ -1,0 +1,11 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowsPublishToOneTopic",
+            "Effect": "Allow",
+            "Action": "sns:Publish",
+            "Resource": "%CURRENT_TOPIC_ARN%"
+        }
+    ]
+}

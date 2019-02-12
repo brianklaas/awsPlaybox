@@ -1,7 +1,7 @@
 component {
 	
 	this.name = 'awsPlaybox';
-	this.applicationTimeout = CreateTimeSpan(0, 0, 5, 0);
+	this.applicationTimeout = CreateTimeSpan(0, 0, 15, 0);
 	this.sessionManagement = false;
 
     function onApplicationStart(){
@@ -16,7 +16,8 @@ component {
         application.awsResources.stepFunctionRandomImageARN = "ARN OF THE RANDOM IMAGE STEP FUNCTION STATE MACHINE GOES HERE";
         application.awsResources.stepFunctionTranscribeTranslateARN = "ARN OF THE TRANSCRIBE, TRANSLATE, SPEAK STEP FUNCTION STATE MACHINE GOES HERE";
         application.awsResources.dynamoDBTableName = "TABLE NAME OF THE TABLE IN DYNAMODB IN dynamodb.cfm GOES HERE";
-		application.awsResources.currentSNSTopicARN = "";
+        application.awsResources.currentSNSTopicARN = "";
+        application.awsResources.iam = {};
 
         return true;
     }

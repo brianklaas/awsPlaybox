@@ -4,7 +4,7 @@ AWS Service Factory
 This component creates AWS service objects based on the parameter passed in.
 
 Author: Brian Klaas (brian.klaas@gmail.com)
-(c) 2018, Brian Klaas
+(c) 2019, Brian Klaas
 
 */
 

@@ -27,3 +27,22 @@ a:visited {
 .spacer {
 	padding: 12px;
 }
+
+.paddedList li:not(:last-child) {
+	margin-bottom: 10px;
+}
+
+.doItButton {
+	font-size: 10px;
+	background: #00ff00;
+	padding: 4px;
+	border-radius:4px;
+	text-decoration: none;
+}
+
+.errorBox {
+	color: white;
+	background: #a00000;
+	padding: 8px;
+	border-radius:4px;
+}

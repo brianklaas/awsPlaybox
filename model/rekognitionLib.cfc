@@ -4,7 +4,7 @@ Rekognition Utility Functions
 This component contains functions to make requests to AWS Rekognition.
 
 Author: Brian Klaas (brian.klaas@gmail.com)
-(c) 2018, Brian Klaas
+(c) 2019, Brian Klaas
 
 */
 
