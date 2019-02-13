@@ -29,32 +29,37 @@ component output="false" hint="A utility for creating AWS Service objects." {
 	*/
 	public any function createServiceObject(required string serviceName) {
 		var serviceObject = 0;
+		var javaObjectName = "";
 		switch(lcase(arguments.serviceName)){
 			case 'dynamodb':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder";
+				break;
+			case 'iam':
+				javaObjectName = "com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder";
 				break;
 			case 'lambda':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.lambda.AWSLambdaClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.lambda.AWSLambdaClientBuilder";
 				break;
 			case 'rekognition':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder";
 				break;
 			case 'sns':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.sns.AmazonSNSClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.sns.AmazonSNSClientBuilder";
 				break;
 			case 'stepFunctions':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.stepfunctions.AWSStepFunctionsClientBuilder";
 				break;
 			case 'transcribe':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.transcribe.AmazonTranscribeClientBuilder";
 				break;
 			case 'translate':
-				serviceObject = CreateObject('java', 'com.amazonaws.services.translate.AmazonTranslateClientBuilder').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
+				javaObjectName = "com.amazonaws.services.translate.AmazonTranslateClientBuilder";
 				break;
 			default:
 				throw(message="Unsupported service requested", detail="You have requested an AWS service (#arguments.serviceName#) which is not supported at this time.");
 				break;
 		}
+		serviceObject = CreateObject('java', '#javaObjectName#').standard().withCredentials(variables.awsStaticCredentialsProvider).withRegion(#variables.awsRegion#).build();
 		return serviceObject;
 	}
 
