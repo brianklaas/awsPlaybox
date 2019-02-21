@@ -321,6 +321,7 @@
                                     <li><b>User Secret Key:</b> #application.awsResources.iam.PlayboxUserSecretKey#</li>
                                     <li><b>User Access Key Status:</b> #application.awsResources.iam.PlayboxUserAccessKeyStatus#</li>
                                     <li><b>User Access Key Created On:</b> #DateTimeFormat(application.awsResources.iam.PlayboxUserAccessKeyCreatedOn,"yyyy-mm-dd HH:nn:ss")#</li>
+                                    <li><b><a href="iamTestApp/index.cfm" target="_blank">Test out the permissions</a></b> for this user</li>
                                 </cfoutput>
                             </ul>
                         </cfif>

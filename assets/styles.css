@@ -40,6 +40,13 @@ a:visited {
 	text-decoration: none;
 }
 
+.successBox {
+	color: white;
+	background: #006d00;
+	padding: 8px;
+	border-radius:4px;
+}
+
 .errorBox {
 	color: white;
 	background: #a00000;
