@@ -11,8 +11,8 @@
             createPolicyRequest = CreateObject('java', 'com.amazonaws.services.identitymanagement.model.CreatePolicyRequest')
                 .withPolicyName(policyName)
                 .withDescription('Allows read/write permission to the awsPlayboxPrivate S3 bucket.');
-            policyDetails = fileRead(expandPath("./iamPolicies/awsPlayboxPrivateReadWrite.txt"));
-            createPolicyRequest.setPolicyDocument(policyDetails);
+            policyJSON = fileRead(expandPath("./iamPolicies/awsPlayboxPrivateReadWrite.txt"));
+            createPolicyRequest.setPolicyDocument(policyJSON);
             createPolicyResult = iam.createPolicy(createPolicyRequest);
             policyDetails = createPolicyResult.getPolicy();
             application.awsResources.iam.S3PolicyName = policyDetails.getPolicyName();
@@ -30,10 +30,10 @@
             createPolicyRequest = CreateObject('java', 'com.amazonaws.services.identitymanagement.model.CreatePolicyRequest')
                 .withPolicyName(policyName)
                 .withDescription('Allows user to send message to the SNS topic:' & application.awsResources.currentSNSTopicARN);
-            policyDetails = fileRead(expandPath("./iamPolicies/snsSendMessage.txt"));
+            policyJSON = fileRead(expandPath("./iamPolicies/snsSendMessage.txt"));
             // The policy text file has a placeholder for the current SNS topic for the application
             policyDetails = replace(policyDetails, "%CURRENT_TOPIC_ARN%", application.awsResources.currentSNSTopicARN);
-            createPolicyRequest.setPolicyDocument(policyDetails);
+            createPolicyRequest.setPolicyDocument(policyJSON);
             createPolicyResult = iam.createPolicy(createPolicyRequest);
             policyDetails = createPolicyResult.getPolicy();
             application.awsResources.iam.SNSPolicyName = policyDetails.getPolicyName();
