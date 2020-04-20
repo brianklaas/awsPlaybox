@@ -13,19 +13,15 @@
 				<h1>AWS Service Playbox</h1>
 				<h3>CFML</h3>
 				<p><a href="dynamodb.cfm">DynamoDB</a></p>
+				<p><a href="iam.cfm">Identity Access Management (IAM)</a></p>
 				<p><a href="lambda.cfm">Lambda Function Invocation</a></p>
 				<p><a href="rekognition.cfm">Rekognition</a></p>
 				<p><a href="sns.cfm">Simple Notification Service (SNS)</a></p>
+				<p><a href="s3.cfm">Simple Storage Service (S3)</a></p>
 				<p><a href="stepFunctions.cfm">Step Functions</a></p>
 				<p><a href="transcribe.cfm">Transcribe</a></p>
 				<p><a href="translate.cfm">Translate</a></p>
 				<p>&nbsp;</p>
-				<!---
-				<h3>Python</h3>
-				<p><a href="python/sns-python.cfm">Simple Notification Service (SNS)</a></p>
-				<div class="spacer"></div>
-				<p>&nbsp;</p>
-				--->
 				<div class="smallerText">
 					<h3>Source Code</h3>
 					<p>Lambda:</p>

@@ -4,7 +4,7 @@ AWS Service Factory
 This component creates AWS service objects based on the parameter passed in.
 
 Author: Brian Klaas (brian.klaas@gmail.com)
-(c) 2019, Brian Klaas
+(c) 2020, Brian Klaas
 
 */
 
@@ -42,6 +42,9 @@ component output="false" hint="A utility for creating AWS Service objects." {
 				break;
 			case 'rekognition':
 				javaObjectName = "com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder";
+				break;
+			case 's3':
+				javaObjectName = "com.amazonaws.services.s3.AmazonS3ClientBuilder";
 				break;
 			case 'sns':
 				javaObjectName = "com.amazonaws.services.sns.AmazonSNSClientBuilder";
